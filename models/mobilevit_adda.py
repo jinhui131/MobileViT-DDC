@@ -483,6 +483,3 @@ flops, params = profile(model, inputs=(input_tensor, ))
 # 将 FLOPs 和参数量格式化为可读形式
 flops, params = clever_format([flops, params], "%.6f")
 
-print(f"Total Parameters: {params}")
-print(f"Total FLOPs: {flops}")
-

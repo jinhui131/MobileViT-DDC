@@ -143,7 +143,7 @@ class  TransformerEncoder(nn.Module):
         self.ffn_dim = ffn_latent_dim
         self.ffn_dropout = ffn_dropout
         self.std_dropout = dropout
-        # self.cb = CBSLayer(embed_dim)
+
 
     def forward(self, x: Tensor) -> Tensor:
         # multi-head attention
@@ -151,8 +151,7 @@ class  TransformerEncoder(nn.Module):
         x = self.pre_norm_mha(x)
         x = x + res
 
-        # feed forward network
-        # x = x + self.cb(self.pre_norm_ffn(x))
+
         x = x + self.pre_norm_ffn(x)
         return x
 

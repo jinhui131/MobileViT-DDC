@@ -463,18 +463,5 @@ def mobile_vit_dilate_small(num_classes: int = 1000):
     m = MobileViTDilate(config, num_classes=num_classes)
     return m
 
-# 加载模型
-model = mobile_vit_dilate_xx_small()
 
-# 定义输入张量的大小
-input_tensor = torch.randn(1, 3, 256, 256)
-
-# 使用 thop 计算 FLOPs 和参数量
-flops, params = profile(model, inputs=(input_tensor, ))
-
-# 将 FLOPs 和参数量格式化为可读形式
-flops, params = clever_format([flops, params], "%.6f")
-
-print(f"Total Parameters: {params}")
-print(f"Total FLOPs: {flops}")
 

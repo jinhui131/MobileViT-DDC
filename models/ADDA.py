@@ -6,7 +6,6 @@ from timm.models.layers import DropPath
 import torch.nn.functional as F
 from torchvision.ops import DeformConv2d, deform_conv2d  # 引入可变形卷积
 
-from models.kan import KAN
 
 
 class CBSLayer(nn.Module):
@@ -220,16 +219,7 @@ class ADDABlock(nn.Module):
         mlp_hidden_dim = int(dim * mlp_ratio)
         cb_layer = CBSLayer(dim)
         self.mlp = Mlp(in_features=dim, hidden_features=mlp_hidden_dim, act_layer=act_layer, drop=drop, cb_layer=cb_layer)
-        # mlp_hidden_dim = int(dim * mlp_ratio)
-        # self.mlp = KAN(
-        #     layers_hidden=[dim, mlp_hidden_dim, dim],  # 定义 KAN 的隐藏层大小
-        #     grid_size=5,
-        #     spline_order=3,
-        #     scale_noise=0.1,
-        #     scale_base=1.0,
-        #     scale_spline=1.0,
-        #     base_activation=torch.nn.SiLU
-        # )
+
 
     def forward(self, x):
         # 如果启用了 CPE，在每个 block 中进行位置编码的叠加
@@ -244,57 +234,11 @@ class ADDABlock(nn.Module):
 
        # 执行 MLP 层
         x = x + self.drop_path(self.mlp(self.norm2(x)))
-        # # # 保存 x 的原始维度信息
-        # B, H, W, C = x.shape
-        #
-        # # 将输入 reshape 成二维张量：B * H * W x C
-        # x = x.reshape(B * H * W, C)
-        #
-        # # 传入 KAN 进行处理
-        # x = self.mlp(self.norm2(x))
-        #
-        # # 将输出重新 reshape 回四维：B x H x W x C
-        # x = x.view(B, H, W, C)
-        # 形状还原：B, H, W, C -> B, C, H, W
+
         x = x.permute(0, 3, 1, 2)
 
         return x
 
 
-
-# if __name__ == "__main__":
-#     x = torch.rand([64, 120, 14, 14])
-#
-#     B, C, H, W = x.shape
-#     dim = C
-#     num_heads = 3
-#     head_dim = dim // num_heads
-#     #######################
-#
-#     drop_path=0.1
-#     depths = [2, 2, 6, 2]
-#     num_layers = len(depths)
-#     dpr = [x.item() for x in torch.linspace(0, drop_path, sum(depths))]
-#     for i_layer in range(num_layers):
-#         drop_paths = dpr[sum(depths[:i_layer]):sum(depths[:i_layer + 1])]
-#     #######################
-#     m = ADDABlock(dim=C,
-#                     num_heads=num_heads,
-#                     kernel_size=3,
-#                     dilation=[1,2,3],
-#                     mlp_ratio=4.,
-#                     qkv_bias=True,
-#                     qk_scale=head_dim ** -0.5,
-#                     drop=0.,
-#                     attn_drop=0.,
-#                     drop_path=drop_paths[1] if isinstance(drop_paths, list) else drop_paths,
-#                     norm_layer=nn.LayerNorm, act_layer=nn.GELU, cpe_per_block=True)
-#
-#     y = m(x)
-#     # 计算参数量和 FLOPs
-#     flops, params = profile(m, inputs=(x,))
-#     print(y.shape)
-#     print(f"参数量: {params}")
-#     print(f"FLOPs: {flops}")
 
 
