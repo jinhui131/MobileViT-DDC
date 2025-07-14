@@ -37,4 +37,11 @@ CBS module obtains a global context representation via median pooling and broadc
 <li>yacs</li>
 <li>typing</li>
 </ul>
+<h2 id="dataset">Dataset</h2>
+<p>Basic Pattern Dataset (BPD) Women Clothing<br>
+original：<br>
+<a href="https://www.kaggle.com/rizzsum/datasets">https://www.kaggle.com/rizzsum/datasets</a><br>
+Used in the paper：<a href="https://ieeexplore.ieee.org/document/9080687">https://ieeexplore.ieee.org/document/9080687</a><br>
+Guizhou Embroidery:<br>
+<a href="https://www.kaggle.com/datasets/jinhui1234/guizhou-embroidery">https://www.kaggle.com/datasets/jinhui1234/guizhou-embroidery</a></p>
 
